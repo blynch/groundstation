@@ -9,6 +9,5 @@
     <root>
         <level value="debug" />
         <appender_ref ref="myConsoleAppender" />
-        <appender_ref ref="myAppender" />
     </root>
 </configuration>

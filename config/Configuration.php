@@ -6,17 +6,19 @@ define ('_PRODUCTION', "production");
 define ('_QA', "qa");
 
 // Set up the paths
+$current = getcwd();
+$base = str_replace("web", "", $current);
 $path = get_include_path();
-$path .= ":config/";
-$path .= ":controller";
-$path .= ":model";
-$path .= ":view";
-$path .= ":common";
-$path .= ":common/ext";
+$path .= ":$base"."config/";
+$path .= ":$base"."controller";
+$path .= ":$base"."model";
+$path .= ":$base"."view";
+$path .= ":$base"."common";
+$path .= ":$base"."common/ext";
 set_include_path($path);
 
 // Smarty Template Configuration
-define ('SMARTY_DIR', 'common/ext/Smarty/libs/');
+define ('SMARTY_DIR', $base . 'common/ext/Smarty/libs/');
 include_once(SMARTY_DIR . 'Smarty.class.php');
 
 include('log4php/Logger.php');
@@ -43,14 +45,14 @@ class Configuration
 
 		$this->config = require_once("config.inc");
 		$this->config['_PRODUCTION'] = stripos($serverName, "dev") === false ? false : true;
-
+		global $base;
 		if($this->config['_PRODUCTION'] === false) {
 			$developmentConfig = require_once("config.development.inc");
 			$this->config = array_merge($this->config, $developmentConfig);
-			Logger::configure("config/log4php.dev.xml");
+			Logger::configure($base."config/log4php.dev.xml");
 		}
 		else 
-			Logger::configure("config/log4php.prod.xml");
+			Logger::configure($base."config/log4php.prod.xml");
 
 		$serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : "";
 
@@ -59,6 +61,7 @@ class Configuration
 		define('BASE_URL', "http://".$serverName);
 		define('SECURE_URL', "https://".$serverName);
 
+		 date_default_timezone_set('UTC');
 
 		spl_autoload_register('globalautoload');
 	}

@@ -1,17 +1,25 @@
 <?php 
 
-
 class CustomSmarty extends Smarty {
-   function __construct()
+   function __construct(&$ctx)
    {
         parent::__construct();
 
-        $this->setTemplateDir('templates/');
-        $this->setCompileDir('templates/compile/');
-        $this->setConfigDir('templates/config/');
-        $this->setCacheDir('templates/cache/');
+      	$current = getcwd();
+      	$base = str_replace("web", "", $current);
+        if($ctx->configuration->get("SMARTY_APC")) {
+          $this->setCachingType('apc'); 
+          $this->setCaching(true);
+        }
 
-        $this->caching = Smarty::CACHING_LIFETIME_CURRENT;
+        if($ctx->configuration->get("_SMARTY_DISABLE_WRITES")) {
+          $this->registerResource('file', new RecompilingFileResource());
+        }
+        $this->setTemplateDir($base.'templates/');
+        $this->setCompileDir($base.'templates/compile/');
+        $this->setConfigDir($base.'templates/config/');
+        $this->setCacheDir($base.'templates/cache/');
+        // $this->caching = Smarty::CACHING_LIFETIME_CURRENT;
         $this->assign('app_name', 'AppName');
    }
 

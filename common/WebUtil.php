@@ -10,7 +10,7 @@ class WebUtil {
 
 	public static function startPage(&$ctx) {
 		$ctx->path .= __METHOD__.";";
-		$ctx->smarty = new CustomSmarty;
+		$ctx->smarty = new CustomSmarty($ctx);
 
 		// Start up the GZIP engine
 		ob_start ("ob_gzhandler");

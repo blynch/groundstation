@@ -1,9 +1,11 @@
 <configuration xmlns="http://logging.apache.org/log4php/">
+   <appender name="myConsoleAppender" class="LoggerAppenderConsole" />
+
     <appender name="myAppender" class="LoggerAppenderFile">
         <param name="file" value="/tmp/appname.log" />
     </appender>
     <root>
         <level value="WARN" />
-        <appender_ref ref="myAppender" />
+        <appender_ref ref="myConsoleAppender" />
     </root>
 </configuration>
